@@ -1,5 +1,6 @@
 import os
 import sys
+import pandas as pd
 
 root_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 if root_path not in sys.path:
