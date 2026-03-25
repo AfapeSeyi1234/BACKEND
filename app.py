@@ -39,7 +39,9 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db     = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 
-CORS(app, origins="*")
+CORS(app,
+     origins=["https://ai-based-food-management.vercel.app"],
+     supports_credentials=True)
 
 
 app.config.update(
