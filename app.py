@@ -39,10 +39,8 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db     = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 
-default_origins = "http://localhost:5500,http://127.0.0.1:5500,http://localhost:3000,null"
-allowed_origins = os.getenv("CORS_ORIGINS", default_origins).split(",")
+CORS(app, origins="*")
 
-CORS(app, supports_credentials=True, origins=allowed_origins)
 
 app.config.update(
     SESSION_COOKIE_SAMESITE='None',
