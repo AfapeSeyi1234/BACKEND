@@ -39,7 +39,7 @@ bcrypt = Bcrypt(app)
 
 CORS(app, supports_credentials=True,
      origins=["http://localhost:5500", "http://127.0.0.1:5500",
-               "http://localhost:3000", "null"])
+               "http://localhost:3000", "https://ai-based-food-management.vercel.app", "null"])
 
 app.config.update(
     SESSION_COOKIE_SAMESITE='None',
