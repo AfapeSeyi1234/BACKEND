@@ -1,0 +1,102 @@
+{
+  "feature_columns": [
+    "Day_of_Week_enc",
+    "Meal_Type_enc",
+    "Food_Item_enc",
+    "Popularity_Index"
+  ],
+  "target_column": "Expected_Students",
+  "encoders": {
+    "Day_of_Week": {
+      "classes": [
+        "Friday",
+        "Monday",
+        "Saturday",
+        "Sunday",
+        "Thursday",
+        "Tuesday",
+        "Wednesday"
+      ]
+    },
+    "Meal_Type": {
+      "classes": [
+        "Breakfast",
+        "Lunch",
+        "Supper"
+      ]
+    },
+    "Food_Item": {
+      "classes": [
+        "Akara",
+        "Akara with pap",
+        "Amala",
+        "Beans and Stew",
+        "Bitterleaf soup",
+        "Boiled plantain and egg sauce",
+        "Boiled plantain and stew",
+        "Boiled yam and egg sauce",
+        "Bread & Egg",
+        "Cereal",
+        "Custard",
+        "Eba",
+        "Efo riro and Eba",
+        "Efo soup",
+        "Egusi soup",
+        "Ewedu soup",
+        "Fresh corn",
+        "Fried macaroni",
+        "Fried plantain",
+        "Fried potato and stew",
+        "Fried potatoes and egg sauce",
+        "Fried rice",
+        "Fried yam and egg sauce",
+        "Fried yam and stew",
+        "Jollof and fried rice",
+        "Jollof rice",
+        "Jollof spaghetti",
+        "Macaroni",
+        "Mixed okro",
+        "Mixed okro soup and stew",
+        "Moi Moi",
+        "Moin moin",
+        "Oat",
+        "Oatmeal",
+        "Ogbono soup",
+        "Ogbono with boiled egg",
+        "Okro soup",
+        "Only Rice",
+        "Pap",
+        "Plantain and egg sauce",
+        "Porridge Beans",
+        "Porridge Yam",
+        "Porridge beans",
+        "Poundo",
+        "Poundo yam/Eba with egusi stew",
+        "Rice",
+        "Rice and beans",
+        "Rice and beans with stew",
+        "Semo",
+        "Spaghetti",
+        "Ukazi soup",
+        "Wheat bread",
+        "White Beans",
+        "White Beans and Stew",
+        "White Rice and Gbadun stew",
+        "White rice and Gbadun stew",
+        "White rice and Red stew",
+        "White rice and red stew",
+        "White spaghetti and egg sauce",
+        "White spaghetti and stew",
+        "Yam & Egg Sauce",
+        "Yam and egg sauce",
+        "Yam and stew"
+      ]
+    }
+  },
+  "metrics": {
+    "MAE": 148.7267,
+    "RMSE": 197.5999,
+    "R2": 0.9851
+  },
+  "model_type": "RandomForestRegressor"
+}

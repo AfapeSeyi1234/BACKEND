@@ -2,7 +2,7 @@ import os
 import sys
 import pandas as pd
 
-root_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+root_path = os.path.abspath(os.path.dirname(__file__))
 if root_path not in sys.path:
     sys.path.insert(0, root_path)
 
@@ -22,24 +22,33 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # ── Database config ───────────────────────────────────────────────────────────
-DB_USER     = "postgres"
-DB_PASSWORD = "AIbased"
-DB_HOST     = "localhost"
-DB_PORT     = "5432"
-DB_NAME     = "babcock_db"
-
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'dev-secret-key')
-app.config['SQLALCHEMY_DATABASE_URI'] = \
-    f'postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}'
+
+# Use DATABASE_URL from Render/env, fallback to local default
+default_db_uri = 'postgresql://postgres:AIbased@localhost:5432/babcock_db'
+db_url = os.getenv('DATABASE_URL', default_db_uri)
+
+# Render uses 'postgres://' but SQLAlchemy requires 'postgresql://'
+if db_url.startswith("postgres://"):
+    db_url = db_url.replace("postgres://", "postgresql://", 1)
+
+app.config['SQLALCHEMY_DATABASE_URI'] = db_url
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db     = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 
+<<<<<<< HEAD
 CORS(app, supports_credentials=True,
      origins=["http://localhost:5500", "http://127.0.0.1:5500",
                "http://localhost:3000", "https://ai-based-food-management.vercel.app", "null"])
+=======
+CORS(app,
+     origins=["https://ai-based-food-management.vercel.app"],
+     supports_credentials=True)
+
+>>>>>>> b49b4e0a04b96cc21fb0636d4dc33824d4667304
 
 app.config.update(
     SESSION_COOKIE_SAMESITE='None',
@@ -52,9 +61,9 @@ try:
     from ml.predict import predict_meal_demand, get_valid_options
     ML_AVAILABLE = True
     print("✅ ML model loaded successfully.")
-except FileNotFoundError as e:
+except (ImportError, ModuleNotFoundError, FileNotFoundError) as e:
     ML_AVAILABLE = False
-    print(f"⚠️  ML model not found: {e}")
+    print(f"⚠️  ML model not available: {e}")
 
 # ── Models ────────────────────────────────────────────────────────────────────
 class Admin(db.Model):
@@ -277,7 +286,7 @@ def _calculate_popularity(food_item: str) -> float:
             return round(popularity / max_avg, 4)
 
     # 2. Fall back to Excel seed data
-    excel_path = os.path.join(os.path.dirname(__file__), "..", "ml", "meal_dataset.xlsx")
+    excel_path = os.path.join(os.path.dirname(__file__), "ml", "meal_dataset.xlsx")
     if os.path.exists(excel_path):
         try:
             df = pd.read_excel(excel_path, engine="openpyxl")
@@ -376,7 +385,7 @@ def _export_dataset_to_excel():
     import pandas as pd
     from sqlalchemy import func
 
-    BASE_DIR    = os.path.join(os.path.dirname(__file__), "..", "ml")
+    BASE_DIR    = os.path.join(os.path.dirname(__file__), "ml")
     ACTUALS_LOG = os.path.join(BASE_DIR, "actuals_log.xlsx")
 
     # ── Pull ALL actual records from DB ──────────────────────────────────────
@@ -429,7 +438,7 @@ def _retrain_model():
     Returns new metrics dict or None on failure.
     """
     import importlib
-    train_script = os.path.join(os.path.dirname(__file__), "..", "ml", "train_model.py")
+    train_script = os.path.join(os.path.dirname(__file__), "ml", "train_model.py")
 
     try:
         # Force UTF-8 encoding so emojis and arrows don't crash Windows
@@ -452,7 +461,7 @@ def _retrain_model():
         get_valid_options   = pred_module.get_valid_options
         ML_AVAILABLE        = True
 
-        meta_path = os.path.join(os.path.dirname(__file__), "..", "ml", "model_metadata.json")
+        meta_path = os.path.join(os.path.dirname(__file__), "ml", "model_metadata.json")
         if os.path.exists(meta_path):
             with open(meta_path) as f:
                 return json.load(f).get("metrics")
@@ -481,7 +490,7 @@ def get_actuals_records():
 
     # Check actuals_log.xlsx
     import pandas as pd
-    actuals_log_path = os.path.join(os.path.dirname(__file__), "..", "ml", "actuals_log.xlsx")
+    actuals_log_path = os.path.join(os.path.dirname(__file__), "ml", "actuals_log.xlsx")
     excel_info = {"exists": False, "rows": 0}
 
     if os.path.exists(actuals_log_path):
@@ -529,7 +538,7 @@ def dashboard_chart():
             result[d.isoformat()] = None   # no data for this day yet
 
     # ── Fill missing days from dataset averages per day-of-week ──────────────
-    BASE_DIR   = os.path.join(os.path.dirname(__file__), "..", "ml")
+    BASE_DIR   = os.path.join(os.path.dirname(__file__), "ml")
     SEED_PATH  = os.path.join(BASE_DIR, "meal_dataset.xlsx")
     LOG_PATH   = os.path.join(BASE_DIR, "actuals_log.xlsx")
 
@@ -610,7 +619,7 @@ def dashboard_stats():
     from sqlalchemy import func
 
     # ── Load full dataset (seed + actuals log) ───────────────────────────────
-    BASE_DIR  = os.path.join(os.path.dirname(__file__), "..", "ml")
+    BASE_DIR  = os.path.join(os.path.dirname(__file__), "ml")
     SEED_PATH = os.path.join(BASE_DIR, "meal_dataset.xlsx")
     LOG_PATH  = os.path.join(BASE_DIR, "actuals_log.xlsx")
 
